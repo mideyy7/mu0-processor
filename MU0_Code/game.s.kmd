@@ -1,0 +1,1543 @@
+KMD
+00000000:       ; ;Ayomide Ojediran
+00000000:       ; ;Last updated November, 2025
+00000000:       ; ;PROJECT NAME: 10-16 QUIZ
+00000000:       ; ;This is a quiz game where the player has to answer 15 questions to win
+00000000:       ; ;The objective is to convert decimal numbers to hexadecimal numbers and the user has only 4 lives
+00000000:       ; 
+00000000:       ; TRAFFIC_LIGHTS EQU &FFF         ;Address for traffic lights
+00000000:       ; KEYPAD EQU &FF2                 ;Address for keypad
+00000000:       ; BUZZER EQU &FFD                 ;Address for Buzzer
+00000000:       ; BUSY EQU &FF3                   ;Address for Buzzer Busy
+00000000:       ; SIMPLE_BUTTONS EQU &FF0         ;Address for simple buttons
+00000000:       ; DIGIT_5 EQU &FFA        ;Leftmost
+00000000:       ; DIGIT_4 EQU &FF9
+00000000:       ; DIGIT_3 EQU &FF8
+00000000:       ; DIGIT_2 EQU &FF7
+00000000:       ; DIGIT_1 EQU &FF6
+00000000:       ; DIGIT_0 EQU &FF5        ;Rightmost
+00000000:       ; ;======================INSTRUCTIONS===============================================
+00000000:       ; initial_start
+00000000: 03CE  ;     LDA lights_start
+00000001: 1FFF  ;     STA TRAFFIC_LIGHTS
+00000002: 03E1  ;    LDA display_H                ;Display HELLO
+00000003: 1FFA  ;    STA DIGIT_5
+00000004: 03DE  ;    LDA display_E
+00000005: 1FF9  ;    STA DIGIT_4
+00000006: 03E3  ;    LDA display_L
+00000007: 1FF8  ;    STA DIGIT_3
+00000008: 03E3  ;    LDA display_L
+00000009: 1FF7  ;    STA DIGIT_2
+0000000A: 03E6  ;    LDA display_O
+0000000B: 1FF6  ;    STA DIGIT_1
+0000000C: 03ED  ;    LDA display_dash
+0000000D: 1FF5  ;    STA DIGIT_0
+0000000E:       ; ;============MODULE DELAYS ============   
+0000000E: 041C  ; song5   LDA s5_n1       ; C
+0000000F: 1FFD  ;         STA BUZZER
+00000010: 0FF3  ; wait5a  LDA BUSY
+00000011: 6010  ;         JNE wait5a
+00000012: 041D  ;         LDA s5_n2       ; E
+00000013: 1FFD  ;         STA BUZZER
+00000014: 0FF3  ; wait5b  LDA BUSY
+00000015: 6014  ;         JNE wait5b
+00000016: 041E  ;         LDA s5_n3       ; F
+00000017: 1FFD  ;         STA BUZZER
+00000018: 0FF3  ; wait5c  LDA BUSY
+00000019: 6018  ;         JNE wait5c
+0000001A: 041F  ;         LDA s5_n4       ; G (Hold slightly)
+0000001B: 1FFD  ;         STA BUZZER
+0000001C: 0FF3  ; wait5d  LDA BUSY
+0000001D: 601C  ;         JNE wait5d
+0000001E: 0420  ;         LDA s5_n5       ; E
+0000001F: 1FFD  ;         STA BUZZER
+00000020: 0FF3  ; wait5e  LDA BUSY
+00000021: 6020  ;         JNE wait5e
+00000022: 0421  ;         LDA s5_n6       ; C
+00000023: 1FFD  ;         STA BUZZER
+00000024: 0FF3  ; wait5f  LDA BUSY
+00000025: 6024  ;         JNE wait5f
+00000026: 0422  ;         LDA s5_n7       ; Low G
+00000027: 1FFD  ;         STA BUZZER
+00000028: 0FF3  ; wait5g  LDA BUSY
+00000029: 6028  ;         JNE wait5g
+0000002A: 0423  ;         LDA s5_n8       ; C (Final Note)
+0000002B: 1FFD  ;         STA BUZZER
+0000002C: 0FF3  ; wait5h  LDA BUSY
+0000002D: 602C  ;         JNE wait5h
+0000002E:       ; ;=============END MODULE DELAYS ============
+0000002E: 03DC  ;    LDA display_C                ;Display CHANGE
+0000002F: 1FFA  ;    STA DIGIT_5
+00000030: 03E1  ;    LDA display_H
+00000031: 1FF9  ;    STA DIGIT_4
+00000032: 03DA  ;    LDA display_A
+00000033: 1FF8  ;    STA DIGIT_3
+00000034: 03E5  ;    LDA display_N
+00000035: 1FF7  ;    STA DIGIT_2
+00000036: 03E0  ;    LDA display_G
+00000037: 1FF6  ;    STA DIGIT_1
+00000038: 03DE  ;    LDA display_E
+00000039: 1FF5  ;    STA DIGIT_0   
+0000003A:       ;  ;============MODULE DELAYS ============   
+0000003A: 042A  ; LDA six
+0000003B: 140B  ; STA delay_count
+0000003C: 4395  ; JMP func_delay
+0000003D:       ; delay_return6
+0000003D:       ; ;=============END MODULE DELAYS ============
+0000003D: 03DF  ;    LDA display_F                ;Display FROM
+0000003E: 1FFA  ;    STA DIGIT_5
+0000003F: 03E7  ;    LDA display_R
+00000040: 1FF9  ;    STA DIGIT_4
+00000041: 03D0  ;    LDA display_0
+00000042: 1FF8  ;    STA DIGIT_3
+00000043: 03E4  ;    LDA display_M
+00000044: 1FF7  ;    STA DIGIT_2
+00000045: 03ED  ;    LDA display_dash
+00000046: 1FF6  ;    STA DIGIT_1
+00000047: 03ED  ;    LDA display_dash
+00000048: 1FF5  ;    STA DIGIT_0
+00000049:       ; ;============MODULE DELAYS ============   
+00000049: 042B  ; LDA seven
+0000004A: 140B  ; STA delay_count
+0000004B: 4395  ; JMP func_delay
+0000004C:       ; delay_return7
+0000004C:       ; ;=============END MODULE DELAYS ============
+0000004C: 03DB  ;    LDA display_B                ;Display BASE10
+0000004D: 1FFA  ;    STA DIGIT_5
+0000004E: 03DA  ;    LDA display_A
+0000004F: 1FF9  ;    STA DIGIT_4
+00000050: 03E8  ;    LDA display_S
+00000051: 1FF8  ;    STA DIGIT_3
+00000052: 03DE  ;    LDA display_E
+00000053: 1FF7  ;    STA DIGIT_2
+00000054: 03D1  ;    LDA display_1
+00000055: 1FF6  ;    STA DIGIT_1
+00000056: 03D0  ;    LDA display_0
+00000057: 1FF5  ;    STA DIGIT_0
+00000058:       ; ;============MODULE DELAYS ============   
+00000058: 042C  ; LDA eight
+00000059: 140B  ; STA delay_count
+0000005A: 4395  ; JMP func_delay
+0000005B:       ; delay_return8
+0000005B:       ; ;=============END MODULE DELAYS ============
+0000005B: 03ED  ;    LDA display_dash             ;Display TO
+0000005C: 1FFA  ;    STA DIGIT_5
+0000005D: 03ED  ;    LDA display_dash
+0000005E: 1FF9  ;    STA DIGIT_4
+0000005F: 03E9  ;    LDA display_T
+00000060: 1FF8  ;    STA DIGIT_3
+00000061: 03E6  ;    LDA display_O
+00000062: 1FF7  ;    STA DIGIT_2
+00000063: 03ED  ;    LDA display_dash
+00000064: 1FF6  ;    STA DIGIT_1
+00000065: 03ED  ;    LDA display_dash
+00000066: 1FF5  ;    STA DIGIT_0
+00000067:       ;   ;============MODULE DELAYS============   
+00000067: 042D  ; LDA nine
+00000068: 140B  ; STA delay_count
+00000069: 4395  ; JMP func_delay
+0000006A:       ; delay_return9
+0000006A:       ; ;=============END MODULE DELAYS ============
+0000006A: 03DB  ;    LDA display_B                ;Display BASE16
+0000006B: 1FFA  ;    STA DIGIT_5
+0000006C: 03DA  ;    LDA display_A
+0000006D: 1FF9  ;    STA DIGIT_4
+0000006E: 03E8  ;    LDA display_S
+0000006F: 1FF8  ;    STA DIGIT_3
+00000070: 03DE  ;    LDA display_E
+00000071: 1FF7  ;    STA DIGIT_2
+00000072: 03D1  ;    LDA display_1
+00000073: 1FF6  ;    STA DIGIT_1
+00000074: 03D6  ;    LDA display_6
+00000075: 1FF5  ;    STA DIGIT_0
+00000076:       ;   ;============MODULE DELAYS============   
+00000076: 042E  ; LDA ten
+00000077: 140B  ; STA delay_count
+00000078: 4395  ; JMP func_delay
+00000079:       ; ;=============END MODULE DELAYS ============  
+00000079:       ; ; Game starts here
+00000079:       ; game_start
+00000079:       ; ;=============MODULE INITIALIZE ALL VARIABLES=================
+00000079: 0424  ;     LDA zero
+0000007A: 1406  ;     STA score
+0000007B: 1405  ;     STA win_lose
+0000007C: 1404  ;     STA challenge_index         ;To track question
+0000007D: 03D0  ;     LDA display_0               ; RESET DISPLAY TO ZERO
+0000007E: 1FFA  ;     STA DIGIT_5
+0000007F: 1FF9  ;     STA DIGIT_4
+00000080: 1FF8  ;     STA DIGIT_3
+00000081: 1FF6  ;     STA DIGIT_1
+00000082: 1FF5  ;     STA DIGIT_0
+00000083: 03EF  ;     LDA display_multiply        ; Set multiply sign in DIGIT_2
+00000084: 1FF7  ;     STA DIGIT_2
+00000085: 0428  ;     LDA four            ;START WITH 4 LIVES
+00000086: 1409  ;     STA current_lives
+00000087: 03C9  ;     LDA lights_4lives
+00000088: 1FFF  ;     STA TRAFFIC_LIGHTS
+00000089:       ; ;=============ENDMODULE INITIALIZE ALL VARIABLES=================
+00000089:       ; ;========MODULE DISPLAY QUESTION ==========   
+00000089:       ; show_challenge
+00000089: 0404  ;     LDA challenge_index
+0000008A: 3424  ;     SUB zero
+0000008B: 608D  ;     JNE check_challenge_1
+0000008C: 40C8  ;     JMP display_challenge_0  
+0000008D:       ; check_challenge_1
+0000008D: 0404  ;     LDA challenge_index
+0000008E: 3425  ;     SUB one
+0000008F: 6091  ;     JNE check_challenge_2
+00000090: 40D3  ;     JMP display_challenge_1  
+00000091:       ; check_challenge_2
+00000091: 0404  ;     LDA challenge_index
+00000092: 3426  ;     SUB two
+00000093: 6095  ;     JNE check_challenge_3
+00000094: 40DE  ;     JMP display_challenge_2 
+00000095:       ; check_challenge_3
+00000095: 0404  ;     LDA challenge_index
+00000096: 3427  ;     SUB three
+00000097: 6099  ;     JNE check_challenge_4
+00000098: 40E9  ;     JMP display_challenge_3
+00000099:       ; check_challenge_4
+00000099: 0404  ;     LDA challenge_index
+0000009A: 3428  ;     SUB four
+0000009B: 609D  ;     JNE check_challenge_5
+0000009C: 40F4  ;     JMP display_challenge_4  
+0000009D:       ; check_challenge_5
+0000009D: 0404  ;     LDA challenge_index
+0000009E: 3429  ;     SUB five
+0000009F: 60A1  ;     JNE check_challenge_6
+000000A0: 40FF  ;     JMP display_challenge_5
+000000A1:       ; check_challenge_6
+000000A1: 0404  ;     LDA challenge_index
+000000A2: 342A  ;     SUB six
+000000A3: 60A5  ;     JNE check_challenge_7
+000000A4: 410A  ;     JMP display_challenge_6
+000000A5:       ; check_challenge_7
+000000A5: 0404  ;     LDA challenge_index
+000000A6: 342B  ;     SUB seven
+000000A7: 60A9  ;     JNE check_challenge_8
+000000A8: 4115  ;     JMP display_challenge_7
+000000A9:       ; check_challenge_8
+000000A9: 0404  ;     LDA challenge_index
+000000AA: 342C  ;     SUB eight
+000000AB: 60AD  ;     JNE check_challenge_9
+000000AC: 4120  ;     JMP display_challenge_8
+000000AD:       ; check_challenge_9
+000000AD: 0404  ;     LDA challenge_index
+000000AE: 342D  ;     SUB nine
+000000AF: 60B1  ;     JNE check_challenge_10
+000000B0: 412B  ;     JMP display_challenge_9
+000000B1:       ; check_challenge_10
+000000B1: 0404  ;     LDA challenge_index
+000000B2: 342E  ;     SUB ten
+000000B3: 60B5  ;     JNE check_challenge_11
+000000B4: 4136  ;     JMP display_challenge_10
+000000B5:       ; check_challenge_11
+000000B5: 0404  ;     LDA challenge_index
+000000B6: 342F  ;     SUB eleven
+000000B7: 60B9  ;     JNE check_challenge_12
+000000B8: 4141  ;     JMP display_challenge_11
+000000B9:       ; check_challenge_12
+000000B9: 0404  ;     LDA challenge_index
+000000BA: 3430  ;     SUB twelve
+000000BB: 60BD  ;     JNE check_challenge_13
+000000BC: 414C  ;     JMP display_challenge_12
+000000BD:       ; check_challenge_13
+000000BD: 0404  ;     LDA challenge_index
+000000BE: 3431  ;     SUB thirteen
+000000BF: 60C1  ;     JNE check_challenge_14
+000000C0: 4157  ;     JMP display_challenge_13
+000000C1:       ; check_challenge_14
+000000C1: 0404  ;     LDA challenge_index
+000000C2: 3432  ;     SUB fourteen
+000000C3: 60C5  ;     JNE check_challenge_15
+000000C4: 4162  ;     JMP display_challenge_14
+000000C5:       ; check_challenge_15
+000000C5: 0425  ;     LDA one             ; If we've completed all challenges, player wins!
+000000C6: 1405  ;     STA win_lose
+000000C7: 431C  ;     JMP show_score
+000000C8:       ; ;========DISPLAY QUESTION MODULE END ==========
+000000C8:       ; ;===========QUESTION BANK===============
+000000C8:       ; display_challenge_0             ; Display challenge 0: 100 (0x64)
+000000C8: 03D1  ;     LDA display_1
+000000C9: 1FFA  ;     STA DIGIT_5
+000000CA: 03D0  ;     LDA display_0
+000000CB: 1FF9  ;     STA DIGIT_4
+000000CC: 03D0  ;     LDA display_0
+000000CD: 1FF8  ;     STA DIGIT_3
+000000CE: 042A  ;     LDA six
+000000CF: 1402  ;     STA correct_first
+000000D0: 0428  ;     LDA four
+000000D1: 1403  ;     STA correct_second
+000000D2: 416D  ;     JMP clear_input
+000000D3:       ; display_challenge_1     ; Display challenge 1: 245 (0xF5)
+000000D3: 03D2  ;     LDA display_2
+000000D4: 1FFA  ;     STA DIGIT_5
+000000D5: 03D4  ;     LDA display_4
+000000D6: 1FF9  ;     STA DIGIT_4
+000000D7: 03D5  ;     LDA display_5
+000000D8: 1FF8  ;     STA DIGIT_3
+000000D9: 0433  ;     LDA fifteen
+000000DA: 1402  ;     STA correct_first
+000000DB: 0429  ;     LDA five
+000000DC: 1403  ;     STA correct_second
+000000DD: 416D  ;     JMP clear_input
+000000DE:       ; display_challenge_2     ; Display challenge 2: 128 (0x80)
+000000DE: 03D1  ;     LDA display_1
+000000DF: 1FFA  ;     STA DIGIT_5
+000000E0: 03D2  ;     LDA display_2
+000000E1: 1FF9  ;     STA DIGIT_4
+000000E2: 03D8  ;     LDA display_8
+000000E3: 1FF8  ;     STA DIGIT_3
+000000E4: 042C  ;     LDA eight
+000000E5: 1402  ;     STA correct_first
+000000E6: 0424  ;     LDA zero
+000000E7: 1403  ;     STA correct_second
+000000E8: 416D  ;     JMP clear_input
+000000E9:       ; display_challenge_3     ; Display challenge 3: 199 (0xC7)
+000000E9: 03D1  ;     LDA display_1
+000000EA: 1FFA  ;     STA DIGIT_5
+000000EB: 03D9  ;     LDA display_9
+000000EC: 1FF9  ;     STA DIGIT_4
+000000ED: 03D9  ;     LDA display_9
+000000EE: 1FF8  ;     STA DIGIT_3
+000000EF: 0430  ;     LDA twelve
+000000F0: 1402  ;     STA correct_first
+000000F1: 042B  ;     LDA seven
+000000F2: 1403  ;     STA correct_second
+000000F3: 416D  ;     JMP clear_input
+000000F4:       ; display_challenge_4     ; Display challenge 4: 063 (0x3F)
+000000F4: 03D0  ;     LDA display_0
+000000F5: 1FFA  ;     STA DIGIT_5
+000000F6: 03D6  ;     LDA display_6
+000000F7: 1FF9  ;     STA DIGIT_4
+000000F8: 03D3  ;     LDA display_3
+000000F9: 1FF8  ;     STA DIGIT_3
+000000FA: 0427  ;     LDA three
+000000FB: 1402  ;     STA correct_first
+000000FC: 0433  ;     LDA fifteen
+000000FD: 1403  ;     STA correct_second
+000000FE: 416D  ;     JMP clear_input
+000000FF:       ; display_challenge_5             ; Display challenge 5: 255 (0xFF)
+000000FF: 03D2  ;     LDA display_2
+00000100: 1FFA  ;     STA DIGIT_5
+00000101: 03D5  ;     LDA display_5
+00000102: 1FF9  ;     STA DIGIT_4
+00000103: 03D5  ;     LDA display_5
+00000104: 1FF8  ;     STA DIGIT_3
+00000105: 0433  ;     LDA fifteen
+00000106: 1402  ;     STA correct_first
+00000107: 0433  ;     LDA fifteen
+00000108: 1403  ;     STA correct_second
+00000109: 416D  ;     JMP clear_input
+0000010A:       ; display_challenge_6             ; Display challenge 6: 170 (0xAA)
+0000010A: 03D1  ;     LDA display_1
+0000010B: 1FFA  ;     STA DIGIT_5
+0000010C: 03D7  ;     LDA display_7
+0000010D: 1FF9  ;     STA DIGIT_4
+0000010E: 03D0  ;     LDA display_0
+0000010F: 1FF8  ;     STA DIGIT_3
+00000110: 042E  ;     LDA ten
+00000111: 1402  ;     STA correct_first
+00000112: 042E  ;     LDA ten
+00000113: 1403  ;     STA correct_second
+00000114: 416D  ;     JMP clear_input
+00000115:       ; display_challenge_7             ; Display challenge 7: 085 (0x55)
+00000115: 03D0  ;     LDA display_0
+00000116: 1FFA  ;     STA DIGIT_5
+00000117: 03D8  ;     LDA display_8
+00000118: 1FF9  ;     STA DIGIT_4
+00000119: 03D5  ;     LDA display_5
+0000011A: 1FF8  ;     STA DIGIT_3
+0000011B: 0429  ;     LDA five
+0000011C: 1402  ;     STA correct_first
+0000011D: 0429  ;     LDA five
+0000011E: 1403  ;     STA correct_second
+0000011F: 416D  ;     JMP clear_input 
+00000120:       ; display_challenge_8             ; Display challenge 8: 016 (0x10)
+00000120: 03D0  ;     LDA display_0
+00000121: 1FFA  ;     STA DIGIT_5
+00000122: 03D1  ;     LDA display_1
+00000123: 1FF9  ;     STA DIGIT_4
+00000124: 03D6  ;     LDA display_6
+00000125: 1FF8  ;     STA DIGIT_3
+00000126: 0425  ;     LDA one
+00000127: 1402  ;     STA correct_first
+00000128: 0424  ;     LDA zero
+00000129: 1403  ;     STA correct_second
+0000012A: 416D  ;     JMP clear_input
+0000012B:       ; display_challenge_9             ; Display challenge 9: 222 (0xDE)
+0000012B: 03D2  ;     LDA display_2
+0000012C: 1FFA  ;     STA DIGIT_5
+0000012D: 03D2  ;     LDA display_2
+0000012E: 1FF9  ;     STA DIGIT_4
+0000012F: 03D2  ;     LDA display_2
+00000130: 1FF8  ;     STA DIGIT_3
+00000131: 0431  ;     LDA thirteen
+00000132: 1402  ;     STA correct_first
+00000133: 0432  ;     LDA fourteen
+00000134: 1403  ;     STA correct_second
+00000135: 416D  ;     JMP clear_input
+00000136:       ; display_challenge_10            ; Display challenge 10: 144 (0x90)
+00000136: 03D1  ;     LDA display_1
+00000137: 1FFA  ;     STA DIGIT_5
+00000138: 03D4  ;     LDA display_4
+00000139: 1FF9  ;     STA DIGIT_4
+0000013A: 03D4  ;     LDA display_4
+0000013B: 1FF8  ;     STA DIGIT_3
+0000013C: 042D  ;     LDA nine
+0000013D: 1402  ;     STA correct_first
+0000013E: 0424  ;     LDA zero
+0000013F: 1403  ;     STA correct_second
+00000140: 416D  ;     JMP clear_input
+00000141:       ; display_challenge_11                    ; Display challenge 11: 189 (0xBD)
+00000141: 03D1  ;     LDA display_1
+00000142: 1FFA  ;     STA DIGIT_5
+00000143: 03D8  ;     LDA display_8
+00000144: 1FF9  ;     STA DIGIT_4
+00000145: 03D9  ;     LDA display_9
+00000146: 1FF8  ;     STA DIGIT_3
+00000147: 042F  ;     LDA eleven
+00000148: 1402  ;     STA correct_first
+00000149: 0431  ;     LDA thirteen
+0000014A: 1403  ;     STA correct_second
+0000014B: 416D  ;     JMP clear_input 
+0000014C:       ; display_challenge_12                    ; Display challenge 12: 032 (0x20)
+0000014C: 03D0  ;     LDA display_0
+0000014D: 1FFA  ;     STA DIGIT_5
+0000014E: 03D3  ;     LDA display_3
+0000014F: 1FF9  ;     STA DIGIT_4
+00000150: 03D2  ;     LDA display_2
+00000151: 1FF8  ;     STA DIGIT_3
+00000152: 0426  ;     LDA two
+00000153: 1402  ;     STA correct_first
+00000154: 0424  ;     LDA zero
+00000155: 1403  ;     STA correct_second
+00000156: 416D  ;     JMP clear_input   
+00000157:       ; display_challenge_13                    ; Display challenge 13: 207 (0xCF)
+00000157: 03D2  ;     LDA display_2
+00000158: 1FFA  ;     STA DIGIT_5
+00000159: 03D0  ;     LDA display_0
+0000015A: 1FF9  ;     STA DIGIT_4
+0000015B: 03D7  ;     LDA display_7
+0000015C: 1FF8  ;     STA DIGIT_3
+0000015D: 0430  ;     LDA twelve
+0000015E: 1402  ;     STA correct_first
+0000015F: 0433  ;     LDA fifteen
+00000160: 1403  ;     STA correct_second
+00000161: 416D  ;     JMP clear_input
+00000162:       ; display_challenge_14                    ;Display challenge 14: 136 (0x88)
+00000162: 03D1  ;     LDA display_1
+00000163: 1FFA  ;     STA DIGIT_5
+00000164: 03D3  ;     LDA display_3
+00000165: 1FF9  ;     STA DIGIT_4
+00000166: 03D6  ;     LDA display_6
+00000167: 1FF8  ;     STA DIGIT_3
+00000168: 042C  ;     LDA eight
+00000169: 1402  ;     STA correct_first
+0000016A: 042C  ;     LDA eight
+0000016B: 1403  ;     STA correct_second
+0000016C: 416D  ;     JMP clear_input
+0000016D:       ; clear_input
+0000016D: 0425  ;     LDA one             ; FIX: Reset input tracker
+0000016E: 140D  ;     STA which_hold
+0000016F: 03EF  ;     LDA display_multiply
+00000170: 1FF7  ;     STA DIGIT_2
+00000171:       ;     ; Clear input digits
+00000171: 03ED  ;     LDA display_dash
+00000172: 1FF6  ;     STA DIGIT_1
+00000173: 03ED  ;     LDA display_dash
+00000174: 1FF5  ;     STA DIGIT_0
+00000175:       ; ;=========== END QUESTION BANK===============
+00000175:       ; ;=========== MODULE: GET DIGIT===============
+00000175:       ; get_Digit
+00000175: 0FF2  ;     LDA KEYPAD          ; Check if no keypad is clicked
+00000176: 6178  ;     JNE check_key_0
+00000177: 4175  ;     JMP get_Digit       ; Loop if nothing pressed
+00000178:       ; check_key_0       
+00000178: 0FF2  ;     LDA KEYPAD
+00000179: 33F0  ;     SUB key_0
+0000017A: 6188  ;     JNE check_key_1
+0000017B: 040D  ;     LDA which_hold
+0000017C: 3425  ;     SUB one
+0000017D: 6183  ;     JNE hold0_2
+0000017E: 03D0  ;     LDA display_0
+0000017F: 1FF6  ;     STA DIGIT_1
+00000180: 0424  ;     LDA zero
+00000181: 1400  ;     STA firstDigit 
+00000182: 4274  ;     JMP wait_release   
+00000183:       ; hold0_2
+00000183: 03D0  ;     LDA display_0
+00000184: 1FF5  ;     STA DIGIT_0
+00000185: 0424  ;     LDA zero
+00000186: 1401  ;     STA secondDigit 
+00000187: 4274  ;     JMP wait_release
+00000188:       ; check_key_1
+00000188: 0FF2  ;     LDA KEYPAD
+00000189: 33F1  ;     SUB key_1
+0000018A: 6198  ;     JNE check_key_2
+0000018B: 040D  ;     LDA which_hold
+0000018C: 3425  ;     SUB one
+0000018D: 6193  ;     JNE hold1_2
+0000018E: 03D1  ;     LDA display_1
+0000018F: 1FF6  ;     STA DIGIT_1
+00000190: 0425  ;     LDA one 
+00000191: 1400  ;     STA firstDigit
+00000192: 4274  ;     JMP wait_release
+00000193:       ; hold1_2
+00000193: 03D1  ;     LDA display_1
+00000194: 1FF5  ;     STA DIGIT_0
+00000195: 0425  ;     LDA one
+00000196: 1401  ;     STA secondDigit 
+00000197: 4274  ;     JMP wait_release
+00000198:       ; check_key_2
+00000198: 0FF2  ;     LDA KEYPAD
+00000199: 33F2  ;     SUB key_2
+0000019A: 61A8  ;     JNE check_key_3
+0000019B: 040D  ;     LDA which_hold
+0000019C: 3425  ;     SUB one
+0000019D: 61A3  ;     JNE hold2_2
+0000019E: 03D2  ;     LDA display_2
+0000019F: 1FF6  ;     STA DIGIT_1
+000001A0: 0426  ;     LDA two 
+000001A1: 1400  ;     STA firstDigit
+000001A2: 4274  ;     JMP wait_release
+000001A3:       ; hold2_2
+000001A3: 03D2  ;     LDA display_2
+000001A4: 1FF5  ;     STA DIGIT_0
+000001A5: 0426  ;     LDA two
+000001A6: 1401  ;     STA secondDigit 
+000001A7: 4274  ;     JMP wait_release
+000001A8:       ; check_key_3
+000001A8: 0FF2  ;     LDA KEYPAD
+000001A9: 33F3  ;     SUB key_3               
+000001AA: 61B8  ;     JNE check_key_4         
+000001AB: 040D  ;     LDA which_hold
+000001AC: 3425  ;     SUB one
+000001AD: 61B3  ;     JNE hold3_2
+000001AE: 03D3  ;     LDA display_3
+000001AF: 1FF6  ;     STA DIGIT_1
+000001B0: 0427  ;     LDA three               
+000001B1: 1400  ;     STA firstDigit
+000001B2: 4274  ;     JMP wait_release
+000001B3:       ; hold3_2
+000001B3: 03D3  ;     LDA display_3
+000001B4: 1FF5  ;     STA DIGIT_0
+000001B5: 0427  ;     LDA three               
+000001B6: 1401  ;     STA secondDigit 
+000001B7: 4274  ;     JMP wait_release
+000001B8:       ; check_key_4
+000001B8: 0FF2  ;     LDA KEYPAD
+000001B9: 33F4  ;     SUB key_4               
+000001BA: 61C8  ;     JNE check_key_5        
+000001BB: 040D  ;     LDA which_hold
+000001BC: 3425  ;     SUB one
+000001BD: 61C3  ;     JNE hold4_2
+000001BE: 03D4  ;     LDA display_4
+000001BF: 1FF6  ;     STA DIGIT_1
+000001C0: 0428  ;     LDA four              
+000001C1: 1400  ;     STA firstDigit
+000001C2: 4274  ;     JMP wait_release
+000001C3:       ; hold4_2
+000001C3: 03D4  ;     LDA display_4
+000001C4: 1FF5  ;     STA DIGIT_0
+000001C5: 0428  ;     LDA four              
+000001C6: 1401  ;     STA secondDigit 
+000001C7: 4274  ;     JMP wait_release
+000001C8:       ; check_key_5
+000001C8: 0FF2  ;     LDA KEYPAD
+000001C9: 33F5  ;     SUB key_5              
+000001CA: 61D8  ;     JNE check_key_6        
+000001CB: 040D  ;     LDA which_hold
+000001CC: 3425  ;     SUB one
+000001CD: 61D3  ;     JNE hold5_2
+000001CE: 03D5  ;     LDA display_5
+000001CF: 1FF6  ;     STA DIGIT_1
+000001D0: 0429  ;     LDA five             
+000001D1: 1400  ;     STA firstDigit
+000001D2: 4274  ;     JMP wait_release
+000001D3:       ; hold5_2
+000001D3: 03D5  ;     LDA display_5
+000001D4: 1FF5  ;     STA DIGIT_0
+000001D5: 0429  ;     LDA five             
+000001D6: 1401  ;     STA secondDigit 
+000001D7: 4274  ;     JMP wait_release
+000001D8:       ; check_key_6
+000001D8: 0FF2  ;     LDA KEYPAD
+000001D9: 33F6  ;     SUB key_6              
+000001DA: 61E8  ;     JNE check_key_7        
+000001DB: 040D  ;     LDA which_hold
+000001DC: 3425  ;     SUB one
+000001DD: 61E3  ;     JNE hold6_2
+000001DE: 03D6  ;     LDA display_6
+000001DF: 1FF6  ;     STA DIGIT_1
+000001E0: 042A  ;     LDA six             
+000001E1: 1400  ;     STA firstDigit
+000001E2: 4274  ;     JMP wait_release
+000001E3:       ; hold6_2
+000001E3: 03D6  ;     LDA display_6
+000001E4: 1FF5  ;     STA DIGIT_0
+000001E5: 042A  ;     LDA six             
+000001E6: 1401  ;     STA secondDigit 
+000001E7: 4274  ;     JMP wait_release
+000001E8:       ; check_key_7
+000001E8: 0FF2  ;     LDA KEYPAD
+000001E9: 33F7  ;     SUB key_7              
+000001EA: 61F8  ;     JNE check_key_8        
+000001EB: 040D  ;     LDA which_hold
+000001EC: 3425  ;     SUB one
+000001ED: 61F3  ;     JNE hold7_2
+000001EE: 03D7  ;     LDA display_7
+000001EF: 1FF6  ;     STA DIGIT_1
+000001F0: 042B  ;     LDA seven            
+000001F1: 1400  ;     STA firstDigit
+000001F2: 4274  ;     JMP wait_release
+000001F3:       ; hold7_2
+000001F3: 03D7  ;     LDA display_7
+000001F4: 1FF5  ;     STA DIGIT_0
+000001F5: 042B  ;     LDA seven             
+000001F6: 1401  ;     STA secondDigit 
+000001F7: 4274  ;     JMP wait_release
+000001F8:       ; check_key_8
+000001F8: 0FF2  ;     LDA KEYPAD
+000001F9: 33F8  ;     SUB key_8              
+000001FA: 6208  ;     JNE check_key_9        
+000001FB: 040D  ;     LDA which_hold
+000001FC: 3425  ;     SUB one
+000001FD: 6203  ;     JNE hold8_2
+000001FE: 03D8  ;     LDA display_8
+000001FF: 1FF6  ;     STA DIGIT_1
+00000200: 042C  ;     LDA eight            
+00000201: 1400  ;     STA firstDigit
+00000202: 4274  ;     JMP wait_release
+00000203:       ; hold8_2
+00000203: 03D8  ;     LDA display_8
+00000204: 1FF5  ;     STA DIGIT_0
+00000205: 042C  ;     LDA eight             
+00000206: 1401  ;     STA secondDigit 
+00000207: 4274  ;     JMP wait_release
+00000208:       ; check_key_9
+00000208: 0FF2  ;     LDA KEYPAD
+00000209: 33F9  ;     SUB key_9             
+0000020A: 6218  ;     JNE check_key_A       
+0000020B: 040D  ;     LDA which_hold
+0000020C: 3425  ;     SUB one
+0000020D: 6213  ;     JNE hold9_2
+0000020E: 03D9  ;     LDA display_9
+0000020F: 1FF6  ;     STA DIGIT_1
+00000210: 042D  ;     LDA nine             
+00000211: 1400  ;     STA firstDigit
+00000212: 4274  ;     JMP wait_release
+00000213:       ; hold9_2
+00000213: 03D9  ;     LDA display_9
+00000214: 1FF5  ;     STA DIGIT_0
+00000215: 042D  ;     LDA nine             
+00000216: 1401  ;     STA secondDigit 
+00000217: 4274  ;     JMP wait_release
+00000218:       ; check_key_A
+00000218: 0FF2  ;     LDA KEYPAD
+00000219: 33FA  ;     SUB key_A              
+0000021A: 6228  ;     JNE check_key_B        
+0000021B: 040D  ;     LDA which_hold
+0000021C: 3425  ;     SUB one
+0000021D: 6223  ;     JNE holdA_2
+0000021E: 03DA  ;     LDA display_A
+0000021F: 1FF6  ;     STA DIGIT_1
+00000220: 042E  ;     LDA ten             
+00000221: 1400  ;     STA firstDigit
+00000222: 4274  ;     JMP wait_release
+00000223:       ; holdA_2
+00000223: 03DA  ;     LDA display_A
+00000224: 1FF5  ;     STA DIGIT_0
+00000225: 042E  ;     LDA ten            
+00000226: 1401  ;     STA secondDigit 
+00000227: 4274  ;     JMP wait_release
+00000228:       ; check_key_B
+00000228: 0FF2  ;     LDA KEYPAD
+00000229: 33FB  ;     SUB key_B             
+0000022A: 6238  ;     JNE check_key_C        
+0000022B: 040D  ;     LDA which_hold
+0000022C: 3425  ;     SUB one
+0000022D: 6233  ;     JNE holdB_2
+0000022E: 03DB  ;     LDA display_B
+0000022F: 1FF6  ;     STA DIGIT_1
+00000230: 042F  ;     LDA eleven             
+00000231: 1400  ;     STA firstDigit
+00000232: 4274  ;     JMP wait_release
+00000233:       ; holdB_2
+00000233: 03DB  ;     LDA display_B
+00000234: 1FF5  ;     STA DIGIT_0
+00000235: 042F  ;     LDA eleven             
+00000236: 1401  ;     STA secondDigit 
+00000237: 4274  ;     JMP wait_release
+00000238:       ; check_key_C
+00000238: 0FF2  ;     LDA KEYPAD
+00000239: 33FC  ;     SUB key_C             
+0000023A: 6248  ;     JNE check_key_D       
+0000023B: 040D  ;     LDA which_hold
+0000023C: 3425  ;     SUB one
+0000023D: 6243  ;     JNE holdC_2
+0000023E: 03DC  ;     LDA display_C
+0000023F: 1FF6  ;     STA DIGIT_1
+00000240: 0430  ;     LDA twelve             
+00000241: 1400  ;     STA firstDigit
+00000242: 4274  ;     JMP wait_release
+00000243:       ; holdC_2
+00000243: 03DC  ;     LDA display_C
+00000244: 1FF5  ;     STA DIGIT_0
+00000245: 0430  ;     LDA twelve             
+00000246: 1401  ;     STA secondDigit 
+00000247: 4274  ;     JMP wait_release
+00000248:       ; check_key_D
+00000248: 0FF2  ;     LDA KEYPAD
+00000249: 33FD  ;     SUB key_D             
+0000024A: 6258  ;     JNE check_key_E        
+0000024B: 040D  ;     LDA which_hold
+0000024C: 3425  ;     SUB one
+0000024D: 6253  ;     JNE holdD_2
+0000024E: 03DD  ;     LDA display_D
+0000024F: 1FF6  ;     STA DIGIT_1
+00000250: 0431  ;     LDA thirteen             
+00000251: 1400  ;     STA firstDigit
+00000252: 4274  ;     JMP wait_release
+00000253:       ; holdD_2
+00000253: 03DD  ;     LDA display_D
+00000254: 1FF5  ;     STA DIGIT_0
+00000255: 0431  ;     LDA thirteen             
+00000256: 1401  ;     STA secondDigit 
+00000257: 4274  ;     JMP wait_release
+00000258:       ; check_key_E
+00000258: 0FF2  ;     LDA KEYPAD
+00000259: 33FE  ;     SUB key_E             
+0000025A: 6268  ;     JNE check_key_F        
+0000025B: 040D  ;     LDA which_hold
+0000025C: 3425  ;     SUB one
+0000025D: 6263  ;     JNE holdE_2
+0000025E: 03DE  ;     LDA display_E
+0000025F: 1FF6  ;     STA DIGIT_1
+00000260: 0432  ;     LDA fourteen             
+00000261: 1400  ;     STA firstDigit
+00000262: 4274  ;     JMP wait_release
+00000263:       ; holdE_2
+00000263: 03DE  ;     LDA display_E
+00000264: 1FF5  ;     STA DIGIT_0
+00000265: 0432  ;     LDA fourteen            
+00000266: 1401  ;     STA secondDigit 
+00000267: 4274  ;     JMP wait_release
+00000268:       ; check_key_F
+00000268: 040D  ;     LDA which_hold
+00000269: 3425  ;     SUB one
+0000026A: 6270  ;     JNE holdF_2
+0000026B: 03DF  ;     LDA display_F
+0000026C: 1FF6  ;     STA DIGIT_1
+0000026D: 0433  ;     LDA fifteen             
+0000026E: 1400  ;     STA firstDigit
+0000026F: 4274  ;     JMP wait_release
+00000270:       ; holdF_2
+00000270: 03DF  ;     LDA display_F
+00000271: 1FF5  ;     STA DIGIT_0
+00000272: 0433  ;     LDA fifteen           
+00000273: 1401  ;     STA secondDigit 
+00000274:       ; wait_release            ; Wait for key release before accepting next input
+00000274: 0FF2  ;     LDA KEYPAD
+00000275: 6274  ;     JNE wait_release
+00000276: 040D  ;     LDA which_hold
+00000277: 3425  ;     SUB one
+00000278: 627C  ;     JNE check_answer
+00000279: 0426  ;     LDA two
+0000027A: 140D  ;     STA which_hold
+0000027B: 4175  ;     JMP get_Digit
+0000027C:       ; ;=========== END MODULE===========
+0000027C:       ; ;=========== CHECK IF ANSWER IS CORRECT============
+0000027C:       ; check_answer
+0000027C: 0400  ;     LDA firstDigit               ; Check first digit
+0000027D: 3402  ;     SUB correct_first
+0000027E: 62A5  ;     JNE wrong_answer 
+0000027F: 0401  ;     LDA secondDigit             ; Check second digit
+00000280: 3403  ;     SUB correct_second
+00000281: 62A5  ;     JNE wrong_answer 
+00000282: 0406  ;     LDA score   ; If it does not branch to wrong answer then it is correct
+00000283: 2425  ;     ADD one
+00000284: 1406  ;     STA score           ;increment score
+00000285: 4286  ;     JMP correct_answer
+00000286:       ; ;=========== END OF BLOCK============
+00000286:       ; correct_answer
+00000286: 03E7  ;     LDA display_R
+00000287: 1FFA  ;     STA DIGIT_5
+00000288: 03E2  ;     LDA display_I
+00000289: 1FF9  ;     STA DIGIT_4
+0000028A: 03E0  ;     LDA display_G
+0000028B: 1FF8  ;     STA DIGIT_3
+0000028C: 03E1  ;     LDA display_H
+0000028D: 1FF7  ;     STA DIGIT_2
+0000028E: 03E9  ;     LDA display_T
+0000028F: 1FF6  ;     STA DIGIT_1
+00000290: 03ED  ;     LDA display_dash
+00000291: 1FF5  ;     STA DIGIT_0
+00000292:       ; song1   
+00000292: 040E  ;         LDA s1_n1       ; Load Note C data
+00000293: 1FFD  ;         STA BUZZER      ; Write to buzzer
+00000294: 0FF3  ; wait1a  LDA BUSY        ; Load busy flag
+00000295: 6294  ;         JNE wait1a      ;Wait for the note to finish playing
+00000296: 040F  ;         LDA s1_n2       
+00000297: 1FFD  ;         STA BUZZER      
+00000298: 0FF3  ; wait1b  LDA BUSY       
+00000299: 6298  ;         JNE wait1b      
+0000029A: 0410  ;         LDA s1_n3       
+0000029B: 1FFD  ;         STA BUZZER      
+0000029C: 0FF3  ; wait1c  LDA BUSY       
+0000029D: 629C  ;         JNE wait1c      
+0000029E:       ;  ;============DELAYS ============   
+0000029E: 0424  ; LDA zero
+0000029F: 140B  ; STA delay_count
+000002A0: 4395  ; JMP func_delay
+000002A1:       ; delay_return0
+000002A1:       ; ;=============DELAYS ============       
+000002A1: 0404  ;     LDA challenge_index ; Move to next question
+000002A2: 2425  ;     ADD one
+000002A3: 1404  ;     STA challenge_index
+000002A4: 4089  ;     JMP show_challenge
+000002A5:       ; wrong_answer
+000002A5: 03EB  ;     LDA display_W
+000002A6: 1FFA  ;     STA DIGIT_5
+000002A7: 03E7  ;     LDA display_R
+000002A8: 1FF9  ;     STA DIGIT_4
+000002A9: 03E6  ;     LDA display_O
+000002AA: 1FF8  ;     STA DIGIT_3
+000002AB: 03E5  ;     LDA display_N
+000002AC: 1FF7  ;     STA DIGIT_2
+000002AD: 03E0  ;     LDA display_G
+000002AE: 1FF6  ;     STA DIGIT_1
+000002AF: 03ED  ;     LDA display_dash
+000002B0: 1FF5  ;     STA DIGIT_0  
+000002B1:       ; song2   
+000002B1: 0411  ;         LDA s2_n1       
+000002B2: 1FFD  ;         STA BUZZER      
+000002B3: 0FF3  ; wait2a  LDA BUSY        
+000002B4: 62B3  ;         JNE wait2a      
+000002B5: 0412  ;         LDA s2_n2       
+000002B6: 1FFD  ;         STA BUZZER      
+000002B7: 0FF3  ; wait2b  LDA BUSY        
+000002B8: 62B7  ;         JNE wait2b      
+000002B9: 0413  ;         LDA s2_n3       
+000002BA: 1FFD  ;         STA BUZZER      
+000002BB: 0FF3  ; wait2c  LDA BUSY        
+000002BC: 62BB  ;         JNE wait2c            
+000002BD:       ;  ;============DELAYS ============   
+000002BD: 0425  ; LDA one
+000002BE: 140B  ; STA delay_count
+000002BF: 4395  ; JMP func_delay
+000002C0:       ; delay_return1
+000002C0:       ; ;=============DELAYS ============   
+000002C0:       ;  ; =====DECREASE LIVES==========
+000002C0: 0409  ;     LDA current_lives
+000002C1: 3425  ;     SUB one
+000002C2: 1409  ;     STA current_lives                   
+000002C3: 62C5  ;     JNE check_3_lives                   ; Check which life display to show
+000002C4: 431C  ;     JMP show_score              ; Game over - no lives left
+000002C5:       ; check_3_lives
+000002C5: 0409  ;     LDA current_lives
+000002C6: 3427  ;     SUB three
+000002C7: 62CD  ;     JNE check_2_lives
+000002C8: 03CA  ;     LDA lights_3lives
+000002C9: 1FFF  ;     STA TRAFFIC_LIGHTS
+000002CA: 0427  ;     LDA three
+000002CB: 1409  ;     STA current_lives
+000002CC: 4089  ;     JMP show_challenge
+000002CD:       ; check_2_lives
+000002CD: 0409  ;     LDA current_lives
+000002CE: 3426  ;     SUB two
+000002CF: 62D5  ;     JNE check_1_life
+000002D0: 03CB  ;     LDA lights_2lives
+000002D1: 1FFF  ;     STA TRAFFIC_LIGHTS
+000002D2: 0426  ;     LDA two
+000002D3: 1409  ;     STA current_lives
+000002D4: 4089  ;     JMP show_challenge 
+000002D5:       ; check_1_life
+000002D5: 0409  ;     LDA current_lives
+000002D6: 3425  ;     SUB one
+000002D7: 62DD  ;     JNE check_0_life
+000002D8: 03CC  ;     LDA lights_1life
+000002D9: 1FFF  ;     STA TRAFFIC_LIGHTS
+000002DA: 0425  ;     LDA one
+000002DB: 1409  ;     STA current_lives
+000002DC: 4089  ;     JMP show_challenge
+000002DD:       ; check_0_life
+000002DD: 0424  ;     LDA zero
+000002DE: 1405  ;     STA win_lose
+000002DF: 431C  ;     JMP show_score
+000002E0:       ; ; ======DECREASE LIVES AND SHOW NEXT QUESTION==========
+000002E0:       ; ;===========LOSE GAME============
+000002E0:       ; game_over
+000002E0:       ;     ; Display "LOSE" or all dashes
+000002E0: 03E3  ;     LDA display_L
+000002E1: 1FFA  ;     STA DIGIT_5
+000002E2: 03E6  ;     LDA display_O
+000002E3: 1FF9  ;     STA DIGIT_4
+000002E4: 03E8  ;     LDA display_S
+000002E5: 1FF8  ;     STA DIGIT_3
+000002E6: 03DE  ;     LDA display_E
+000002E7: 1FF7  ;     STA DIGIT_2
+000002E8: 03ED  ;     LDA display_dash
+000002E9: 1FF6  ;     STA DIGIT_1
+000002EA: 1FF5  ;     STA DIGIT_0 
+000002EB:       ;     ; Turn off all lights
+000002EB: 03CD  ;     LDA lights_lose
+000002EC: 1FFF  ;     STA TRAFFIC_LIGHTS  
+000002ED:       ; ;ADD LOSE SONG
+000002ED: 0418  ; song4   LDA s4_n1       
+000002EE: 1FFD  ;         STA BUZZER
+000002EF: 0FF3  ; wait4a  LDA BUSY
+000002F0: 62EF  ;         JNE wait4a
+000002F1: 0419  ;         LDA s4_n2      
+000002F2: 1FFD  ;         STA BUZZER
+000002F3: 0FF3  ; wait4b  LDA BUSY
+000002F4: 62F3  ;         JNE wait4b
+000002F5: 041A  ;         LDA s4_n3       
+000002F6: 1FFD  ;         STA BUZZER
+000002F7: 0FF3  ; wait4c  LDA BUSY
+000002F8: 62F7  ;         JNE wait4c
+000002F9: 041B  ;         LDA s4_n4       
+000002FA: 1FFD  ;         STA BUZZER
+000002FB: 0FF3  ; wait4d  LDA BUSY
+000002FC: 62FB  ;         JNE wait4d
+000002FD: 43C6  ;         JMP end_game   
+000002FE:       ;  ;===========LOSE GAME ============
+000002FE:       ; ;==========WIN GAME ============
+000002FE:       ; game_won
+000002FE:       ;     ; Display "WIN" 
+000002FE: 03ED  ;     LDA display_dash
+000002FF: 1FFA  ;     STA DIGIT_5
+00000300: 03EB  ;     LDA display_W
+00000301: 1FF9  ;     STA DIGIT_4
+00000302: 03E2  ;     LDA display_I
+00000303: 1FF8  ;     STA DIGIT_3
+00000304: 03E5  ;     LDA display_N
+00000305: 1FF7  ;     STA DIGIT_2
+00000306: 03ED  ;     LDA display_dash
+00000307: 1FF6  ;     STA DIGIT_1
+00000308: 1FF5  ;     STA DIGIT_0  
+00000309:       ;     ; Flash all lights
+00000309: 03C9  ;     LDA lights_4lives
+0000030A: 1FFF  ;     STA TRAFFIC_LIGHTS
+0000030B:       ;  
+0000030B: 0414  ; song3   LDA s3_n1               ;ADD WIN SONG     
+0000030C: 1FFD  ;         STA BUZZER
+0000030D: 0FF3  ; wait3a  LDA BUSY
+0000030E: 630D  ;         JNE wait3a
+0000030F: 0415  ;         LDA s3_n2       
+00000310: 1FFD  ;         STA BUZZER
+00000311: 0FF3  ; wait3b  LDA BUSY
+00000312: 6311  ;         JNE wait3b
+00000313: 0416  ;         LDA s3_n3       
+00000314: 1FFD  ;         STA BUZZER
+00000315: 0FF3  ; wait3c  LDA BUSY
+00000316: 6315  ;         JNE wait3c
+00000317: 0417  ;         LDA s3_n4       
+00000318: 1FFD  ;         STA BUZZER
+00000319: 0FF3  ; wait3d  LDA BUSY
+0000031A: 6319  ;         JNE wait3d
+0000031B: 43C6  ;         JMP end_game
+0000031C:       ; ;===========WIN GAME============
+0000031C:       ; ;===========SHOW SCORE============
+0000031C:       ; show_score
+0000031C: 03CF  ;     LDA lights_amber            ; Flash lights
+0000031D: 1FFF  ;     STA TRAFFIC_LIGHTS
+0000031E: 03ED  ;     LDA display_dash            ; Display "YOU" 
+0000031F: 1FFA  ;     STA DIGIT_5
+00000320: 03EC  ;     LDA display_Y
+00000321: 1FF9  ;     STA DIGIT_4
+00000322: 03E6  ;     LDA display_O
+00000323: 1FF8  ;     STA DIGIT_3
+00000324: 03EA  ;     LDA display_U
+00000325: 1FF7  ;     STA DIGIT_2
+00000326: 03ED  ;     LDA display_dash
+00000327: 1FF6  ;     STA DIGIT_1
+00000328: 1FF5  ;     STA DIGIT_0  
+00000329:       ;  ;============DELAYS ============   
+00000329: 0426  ; LDA two
+0000032A: 140B  ; STA delay_count
+0000032B: 4395  ; JMP func_delay
+0000032C:       ; delay_return2
+0000032C:       ; ;=============DELAYS ============  
+0000032C: 03ED  ;     LDA display_dash    ; Display "GOT"
+0000032D: 1FFA  ;     STA DIGIT_5
+0000032E: 03E0  ;     LDA display_G
+0000032F: 1FF9  ;     STA DIGIT_4
+00000330: 03E6  ;     LDA display_O
+00000331: 1FF8  ;     STA DIGIT_3
+00000332: 03E9  ;     LDA display_T
+00000333: 1FF7  ;     STA DIGIT_2
+00000334: 03ED  ;     LDA display_dash
+00000335: 1FF6  ;     STA DIGIT_1
+00000336: 1FF5  ;     STA DIGIT_0
+00000337:       ;   ;============DELAYS ============   
+00000337: 0427  ; LDA three
+00000338: 140B  ; STA delay_count
+00000339: 4395  ; JMP func_delay
+0000033A:       ; delay_return3
+0000033A:       ; ;=============DELAYS ============
+0000033A:       ;  ;===========MODULE SEPARATE FIRST AND SECOND DIGITS OF USER SCORE=============
+0000033A: 0406  ;     LDA score
+0000033B: 342E  ;     SUB ten
+0000033C: 5342  ;     JGE modulus
+0000033D: 0424  ;     LDA zero
+0000033E: 1407  ;     STA scoreFirstDigit
+0000033F: 0406  ;     LDA score
+00000340: 1408  ;     STA scoreSecondDigit
+00000341: 4347  ;     JMP display_firstScore   
+00000342:       ; modulus
+00000342: 0425  ;     LDA one
+00000343: 1407  ;     STA scoreFirstDigit
+00000344: 0406  ;     LDA score
+00000345: 342E  ;     SUB ten
+00000346: 1408  ;     STA scoreSecondDigit
+00000347:       ; ;===========END MODULE=============
+00000347:       ; ;==============DISPLAY USER_SCORE//15============
+00000347:       ;  display_firstScore                     ;First digit of score can either be 0 or 1
+00000347: 0407  ;     LDA scoreFirstDigit
+00000348: 634C  ;     JNE check_if1
+00000349: 03D0  ;     LDA display_0
+0000034A: 1FFA  ;     STA DIGIT_5
+0000034B: 434F  ;     JMP display_secondScore
+0000034C:       ; check_if1
+0000034C: 03D1  ;     LDA display_1
+0000034D: 1FFA  ;     STA DIGIT_5
+0000034E: 434F  ;     JMP display_secondScore
+0000034F:       ;  
+0000034F:       ; ;=====SECOND DIGIT=============
+0000034F:       ; display_secondScore
+0000034F: 0408  ;     LDA scoreSecondDigit
+00000350: 3424  ;     SUB zero
+00000351: 6355  ;     JNE check2_if1
+00000352: 03D0  ;     LDA display_0
+00000353: 1FF9  ;     STA DIGIT_4
+00000354: 4387  ;     JMP continue
+00000355:       ; check2_if1
+00000355: 0408  ;     LDA scoreSecondDigit
+00000356: 3425  ;     SUB one
+00000357: 635B  ;     JNE check2_if2
+00000358: 03D1  ;     LDA display_1
+00000359: 1FF9  ;     STA DIGIT_4
+0000035A: 4387  ;     JMP continue
+0000035B:       ; check2_if2
+0000035B: 0408  ;     LDA scoreSecondDigit
+0000035C: 3426  ;     SUB two
+0000035D: 6361  ;     JNE check2_if3
+0000035E: 03D2  ;     LDA display_2
+0000035F: 1FF9  ;     STA DIGIT_4
+00000360: 4387  ;     JMP continue
+00000361:       ; check2_if3
+00000361: 0408  ;     LDA scoreSecondDigit
+00000362: 3427  ;     SUB three
+00000363: 6367  ;     JNE check2_if4
+00000364: 03D3  ;     LDA display_3
+00000365: 1FF9  ;     STA DIGIT_4
+00000366: 4387  ;     JMP continue
+00000367:       ; check2_if4
+00000367: 0408  ;     LDA scoreSecondDigit
+00000368: 3428  ;     SUB four
+00000369: 636D  ;     JNE check2_if5
+0000036A: 03D4  ;     LDA display_4
+0000036B: 1FF9  ;     STA DIGIT_4
+0000036C: 4387  ;     JMP continue
+0000036D:       ; check2_if5
+0000036D: 0408  ;     LDA scoreSecondDigit
+0000036E: 3429  ;     SUB five
+0000036F: 6373  ;     JNE check2_if6
+00000370: 03D5  ;     LDA display_5
+00000371: 1FF9  ;     STA DIGIT_4
+00000372: 4387  ;     JMP continue
+00000373:       ; check2_if6
+00000373: 0408  ;     LDA scoreSecondDigit
+00000374: 342A  ;     SUB six
+00000375: 6379  ;     JNE check2_if7
+00000376: 03D6  ;     LDA display_6
+00000377: 1FF9  ;     STA DIGIT_4
+00000378: 4387  ;     JMP continue
+00000379:       ; check2_if7
+00000379: 0408  ;     LDA scoreSecondDigit
+0000037A: 342B  ;     SUB seven
+0000037B: 637F  ;     JNE check2_if8
+0000037C: 03D7  ;     LDA display_7
+0000037D: 1FF9  ;     STA DIGIT_4
+0000037E: 4387  ;     JMP continue
+0000037F:       ; check2_if8
+0000037F: 0408  ;     LDA scoreSecondDigit
+00000380: 342C  ;     SUB eight
+00000381: 6385  ;     JNE check2_if9
+00000382: 03D8  ;     LDA display_8
+00000383: 1FF9  ;     STA DIGIT_4
+00000384: 4387  ;     JMP continue
+00000385:       ; check2_if9
+00000385: 03D9  ;     LDA display_9
+00000386: 1FF9  ;     STA DIGIT_4
+00000387:       ; continue
+00000387: 03EE  ;     LDA display_slash
+00000388: 1FF8  ;     STA DIGIT_3
+00000389: 03EE  ;     LDA display_slash
+0000038A: 1FF7  ;     STA DIGIT_2
+0000038B: 03D1  ;     LDA display_1
+0000038C: 1FF6  ;     STA DIGIT_1
+0000038D: 03D5  ;     LDA display_5
+0000038E: 1FF5  ;     STA DIGIT_0
+0000038F:       ;  ;============DELAYS ============   
+0000038F: 0428  ; LDA four
+00000390: 140B  ; STA delay_count
+00000391: 4395  ; JMP func_delay
+00000392:       ; delay_return4
+00000392:       ; ;=============DELAYS ============
+00000392: 0405  ;     LDA win_lose
+00000393: 62FE  ;     JNE game_won
+00000394: 42E0  ;     JMP game_over 
+00000395:       ; ;===========END MODULE==========
+00000395:       ; ;===========MODULE DELAY==========
+00000395:       ; func_delay
+00000395: 040A  ;     LDA delay
+00000396:       ; delay_temp
+00000396: 3425  ;     SUB one
+00000397: 6396  ;     JNE delay_temp
+00000398: 040C  ;     LDA delay_loop
+00000399: 3425  ;     SUB one
+0000039A: 140C  ;     STA delay_loop
+0000039B: 6395  ;     JNE func_delay
+0000039C: 0433  ;     LDA fifteen
+0000039D: 140C  ;     STA delay_loop
+0000039E:       ; ;========RETURN TO WHERE THE DELAY FUNCTION WAS CALLED
+0000039E: 040B  ;     LDA delay_count
+0000039F: 3424  ;     SUB zero
+000003A0: 63A2  ;     JNE delay_check1
+000003A1: 42A1  ;     JMP delay_return0
+000003A2:       ; delay_check1
+000003A2: 040B  ;     LDA delay_count
+000003A3: 3425  ;     SUB one
+000003A4: 63A6  ;     JNE delay_check2
+000003A5: 42C0  ;     JMP delay_return1
+000003A6:       ; delay_check2
+000003A6: 040B  ;     LDA delay_count
+000003A7: 3426  ;     SUB two
+000003A8: 63AA  ;     JNE delay_check3
+000003A9: 432C  ;     JMP delay_return2
+000003AA:       ; delay_check3
+000003AA: 040B  ;     LDA delay_count
+000003AB: 3427  ;     SUB three
+000003AC: 63AE  ;     JNE delay_check4
+000003AD: 433A  ;     JMP delay_return3
+000003AE:       ; delay_check4
+000003AE: 040B  ;     LDA delay_count
+000003AF: 3428  ;     SUB four
+000003B0: 63B2  ;     JNE delay_check5
+000003B1: 4392  ;     JMP delay_return4
+000003B2:       ; delay_check5
+000003B2: 040B  ;     LDA delay_count
+000003B3: 3429  ;     SUB five
+000003B4: 63B5  ;     JNE delay_check6
+000003B5:       ;     ;JMP delay_return5
+000003B5:       ; delay_check6
+000003B5: 040B  ;     LDA delay_count
+000003B6: 342A  ;     SUB six
+000003B7: 63B9  ;     JNE delay_check7
+000003B8: 403D  ;     JMP delay_return6
+000003B9:       ; delay_check7
+000003B9: 040B  ;     LDA delay_count
+000003BA: 342B  ;     SUB seven
+000003BB: 63BD  ;     JNE delay_check8
+000003BC: 404C  ;     JMP delay_return7
+000003BD:       ; delay_check8
+000003BD: 040B  ;     LDA delay_count
+000003BE: 342C  ;     SUB eight
+000003BF: 63C1  ;     JNE delay_check9
+000003C0: 405B  ;     JMP delay_return8
+000003C1:       ; delay_check9
+000003C1: 040B  ;     LDA delay_count
+000003C2: 342D  ;     SUB nine
+000003C3: 63C5  ;     JNE delay_check10
+000003C4: 406A  ;     JMP delay_return9
+000003C5:       ; delay_check10
+000003C5: 4079  ;     JMP game_start
+000003C6:       ; ;=============END OF DELAYS ============
+000003C6:       ; ;============END GAME==============
+000003C6:       ; end_game
+000003C6: 0FF0  ;     LDA SIMPLE_BUTTONS  ;If simple buttons are clicked go to game_start
+000003C7: 6079  ;     JNE game_start
+000003C8: 43C6  ;     JMP end_game
+000003C9:       ; ;============END GAME==============
+000003C9:       ; ;============DEFINITION OF VARIABLES==============
+000003C9:       ; 
+000003C9: 0131  ; lights_4lives DEFW   &0131   ; All Green LEDs on
+000003CA: 0031  ; lights_3lives DEFW   &0031   ; 3 Green LEDs on
+000003CB: 0011  ; lights_2lives DEFW   &0011   ; 2 Green LEDs on
+000003CC: 0001  ; lights_1life  DEFW   &0001   ; 1 Green LED on
+000003CD: 048C  ; lights_lose DEFW &048C        ;all red
+000003CE: FFFF  ; lights_start DEFW &FFFF        ;all LIGHTS ON
+000003CF: 0242  ; lights_amber DEFW &0242         ;ALL amber
+000003D0: 003F  ; display_0  DEFW &003F           ;DISPLAY LETTERS AND NUMBERS
+000003D1: 0006  ; display_1  DEFW &0006
+000003D2: 00DB  ; display_2  DEFW &00DB
+000003D3: 00CF  ; display_3  DEFW &00CF
+000003D4: 00E6  ; display_4  DEFW &00E6
+000003D5: 00ED  ; display_5  DEFW &00ED
+000003D6: 00FD  ; display_6  DEFW &00FD
+000003D7: 0007  ; display_7  DEFW &0007
+000003D8: 00FF  ; display_8  DEFW &00FF
+000003D9: 00EF  ; display_9  DEFW &00EF
+000003DA: 00F7  ; display_A  DEFW &00F7
+000003DB: 2479  ; display_B  DEFW &2479
+000003DC: 0039  ; display_C  DEFW &0039
+000003DD: 00DE  ; display_D  DEFW &00DE
+000003DE: 00F9  ; display_E  DEFW &00F9
+000003DF: 00F1  ; display_F  DEFW &00F1
+000003E0: 00BD  ; display_G  DEFW &00BD
+000003E1: 00F6  ; display_H  DEFW &00F6
+000003E2: 1209  ; display_I  DEFW &1209
+000003E3: 0038  ; display_L  DEFW &0038
+000003E4: 0336  ; display_M  DEFW &0336
+000003E5: 2136  ; display_N  DEFW &2136
+000003E6: 003F  ; display_O  DEFW &003F
+000003E7: 2471  ; display_R  DEFW &2471
+000003E8: 00ED  ; display_S  DEFW &00ED
+000003E9: 1201  ; display_T  DEFW &1201
+000003EA: 003E  ; display_U  DEFW &003E
+000003EB: 2836  ; display_W  DEFW &2836
+000003EC: 1500  ; display_Y  DEFW &1500
+000003ED: 0040  ; display_dash     DEFW &0040
+000003EE: 0C00  ; display_slash    DEFW &0C00
+000003EF: 2D00  ; display_multiply DEFW &2D00
+000003F0: 0001  ; key_0       DEFW &0001  ;KEYPAD VALUES
+000003F1: 0002  ; key_1       DEFW &0002
+000003F2: 0004  ; key_2       DEFW &0004
+000003F3: 0008  ; key_3       DEFW &0008
+000003F4: 0010  ; key_4       DEFW &0010
+000003F5: 0020  ; key_5       DEFW &0020
+000003F6: 0040  ; key_6       DEFW &0040
+000003F7: 0080  ; key_7       DEFW &0080
+000003F8: 0100  ; key_8       DEFW &0100
+000003F9: 0200  ; key_9       DEFW &0200
+000003FA: 0400  ; key_A       DEFW &0400
+000003FB: 0800  ; key_B       DEFW &0800
+000003FC: 1000  ; key_C       DEFW &1000
+000003FD: 2000  ; key_D       DEFW &2000
+000003FE: 4000  ; key_E       DEFW &4000
+000003FF: 8000  ; key_F       DEFW &8000
+00000400:       ; ; Game variables
+00000400: 0000  ; firstDigit    DEFW &0000                ;To get user input
+00000401: 0000  ; secondDigit   DEFW &0000                ;To get user input
+00000402: 0000  ; correct_first DEFW &0000                ;To store correct first digit
+00000403: 0000  ; correct_second DEFW &0000               ;To store correct second digit
+00000404: 0000  ; challenge_index DEFW &0000              ;To store question number
+00000405: 0000  ; win_lose DEFW &0000                     ;To store game state
+00000406: 0000  ; score DEFW &0000                        ;To hold current score
+00000407: 0000  ; scoreFirstDigit DEFW &0000              ;Used when displaying score
+00000408: 0000  ; scoreSecondDigit DEFW &0000             ;Used when displaying score
+00000409: 0004  ; current_lives DEFW &0004                ;Used when displaying score
+0000040A: FFFF  ; delay  DEFW &FFFF                       ;To implement delays
+0000040B: 0000  ; delay_count DEFW &0000                  ;To track return address of delays
+0000040C: 000F  ; delay_loop DEFW &000F                   ;To track number of delays in the loop
+0000040D: 0001  ; which_hold DEFW &0001                   ;To track whether we are getting the first digit or second di
+                ; git
+0000040E:       ; ; Song 1 
+0000040E: 8450  ; s1_n1   DEFW &8450      ; Dur:4, Oct:5, Note:C (0)
+0000040F: 8454  ; s1_n2   DEFW &8454      ; Dur:4, Oct:5, Note:E (4)
+00000410: 8457  ; s1_n3   DEFW &8457      ; Dur:4, Oct:5, Note:G (7)
+00000411:       ; ; Song 2 
+00000411: 8257  ; s2_n1   DEFW &8257      ; Dur:2, Oct:5, Note:G (7)
+00000412: 8254  ; s2_n2   DEFW &8254      ; Dur:2, Oct:5, Note:E (4)
+00000413: 8250  ; s2_n3   DEFW &8250      ; Dur:2, Oct:5, Note:C (0)
+00000414:       ; ;Song 3 
+00000414: 8250  ; s3_n1   DEFW &8250      ; Dur:2 (0.2s), Oct:5, Note:C
+00000415: 8254  ; s3_n2   DEFW &8254      ; Dur:2 (0.2s), Oct:5, Note:E
+00000416: 8257  ; s3_n3   DEFW &8257      ; Dur:2 (0.2s), Oct:5, Note:G
+00000417: 8C60  ; s3_n4   DEFW &8C60      ; Dur:C (1.2s), Oct:6, Note:C (High!)
+00000418:       ; ; --- Song 4 
+00000418: 8657  ; s4_n1   DEFW &8657      ; Dur:6 (0.6s), Oct:5, Note:G
+00000419: 8656  ; s4_n2   DEFW &8656      ; Dur:6 (0.6s), Oct:5, Note:F#
+0000041A: 8655  ; s4_n3   DEFW &8655      ; Dur:6 (0.6s), Oct:5, Note:F
+0000041B: 8F54  ; s4_n4   DEFW &8F54      ; Dur:F (1.5s), Oct:5, Note:E (Long!)
+0000041C:       ; ; --- Song 5 Data (ENTRY) ---
+0000041C:       ; ; Melody: C4-E4-F4-G4... E4-C4... G3-C4
+0000041C: 8250  ; s5_n1   DEFW &8250      ; Dur:2, Oct:5, C
+0000041D: 8254  ; s5_n2   DEFW &8254      ; Dur:2, Oct:5, E
+0000041E: 8255  ; s5_n3   DEFW &8255      ; Dur:2, Oct:5, F
+0000041F: 8457  ; s5_n4   DEFW &8457      ; Dur:4, Oct:5, G (Longer)
+00000420: 8254  ; s5_n5   DEFW &8254      ; Dur:2, Oct:5, E
+00000421: 8250  ; s5_n6   DEFW &8250      ; Dur:2, Oct:5, C
+00000422: 8447  ; s5_n7   DEFW &8447      ; Dur:4, Oct:4, Low G
+00000423: 8850  ; s5_n8   DEFW &8850      ; Dur:8 (0.8s), Oct:5, C (Final)
+00000424:       ; ; Number constants
+00000424: 0000  ; zero      DEFW &0000
+00000425: 0001  ; one       DEFW &0001
+00000426: 0002  ; two       DEFW &0002
+00000427: 0003  ; three     DEFW &0003
+00000428: 0004  ; four      DEFW &0004
+00000429: 0005  ; five      DEFW &0005
+0000042A: 0006  ; six       DEFW &0006
+0000042B: 0007  ; seven     DEFW &0007
+0000042C: 0008  ; eight     DEFW &0008
+0000042D: 0009  ; nine      DEFW &0009
+0000042E: 000A  ; ten       DEFW &000A
+0000042F: 000B  ; eleven    DEFW &000B
+00000430: 000C  ; twelve    DEFW &000C
+00000431: 000D  ; thirteen  DEFW &000D
+00000432: 000E  ; fourteen  DEFW &000E
+00000433: 000F  ; fifteen   DEFW &000F
+00000434:       ; 
+
+Symbol Table: Labels
+: TRAFFIC_LIGHTS                    00000FFF  Value
+: KEYPAD                            00000FF2  Value
+: BUZZER                            00000FFD  Value
+: BUSY                              00000FF3  Value
+: SIMPLE_BUTTONS                    00000FF0  Value
+: DIGIT_5                           00000FFA  Value
+: DIGIT_4                           00000FF9  Value
+: DIGIT_3                           00000FF8  Value
+: DIGIT_2                           00000FF7  Value
+: DIGIT_1                           00000FF6  Value
+: DIGIT_0                           00000FF5  Value
+: initial_start                     00000000  Local --
+: song5                             0000000E  Local --
+: wait5a                            00000010  Local --
+: wait5b                            00000014  Local --
+: wait5c                            00000018  Local --
+: wait5d                            0000001C  Local --
+: wait5e                            00000020  Local --
+: wait5f                            00000024  Local --
+: wait5g                            00000028  Local --
+: wait5h                            0000002C  Local --
+: delay_return6                     0000003D  Local --
+: delay_return7                     0000004C  Local --
+: delay_return8                     0000005B  Local --
+: delay_return9                     0000006A  Local --
+: game_start                        00000079  Local --
+: show_challenge                    00000089  Local --
+: check_challenge_1                 0000008D  Local --
+: check_challenge_2                 00000091  Local --
+: check_challenge_3                 00000095  Local --
+: check_challenge_4                 00000099  Local --
+: check_challenge_5                 0000009D  Local --
+: check_challenge_6                 000000A1  Local --
+: check_challenge_7                 000000A5  Local --
+: check_challenge_8                 000000A9  Local --
+: check_challenge_9                 000000AD  Local --
+: check_challenge_10                000000B1  Local --
+: check_challenge_11                000000B5  Local --
+: check_challenge_12                000000B9  Local --
+: check_challenge_13                000000BD  Local --
+: check_challenge_14                000000C1  Local --
+: check_challenge_15                000000C5  Local --
+: display_challenge_0               000000C8  Local --
+: display_challenge_1               000000D3  Local --
+: display_challenge_2               000000DE  Local --
+: display_challenge_3               000000E9  Local --
+: display_challenge_4               000000F4  Local --
+: display_challenge_5               000000FF  Local --
+: display_challenge_6               0000010A  Local --
+: display_challenge_7               00000115  Local --
+: display_challenge_8               00000120  Local --
+: display_challenge_9               0000012B  Local --
+: display_challenge_10              00000136  Local --
+: display_challenge_11              00000141  Local --
+: display_challenge_12              0000014C  Local --
+: display_challenge_13              00000157  Local --
+: display_challenge_14              00000162  Local --
+: clear_input                       0000016D  Local --
+: get_Digit                         00000175  Local --
+: check_key_0                       00000178  Local --
+: hold0_2                           00000183  Local --
+: check_key_1                       00000188  Local --
+: hold1_2                           00000193  Local --
+: check_key_2                       00000198  Local --
+: hold2_2                           000001A3  Local --
+: check_key_3                       000001A8  Local --
+: hold3_2                           000001B3  Local --
+: check_key_4                       000001B8  Local --
+: hold4_2                           000001C3  Local --
+: check_key_5                       000001C8  Local --
+: hold5_2                           000001D3  Local --
+: check_key_6                       000001D8  Local --
+: hold6_2                           000001E3  Local --
+: check_key_7                       000001E8  Local --
+: hold7_2                           000001F3  Local --
+: check_key_8                       000001F8  Local --
+: hold8_2                           00000203  Local --
+: check_key_9                       00000208  Local --
+: hold9_2                           00000213  Local --
+: check_key_A                       00000218  Local --
+: holdA_2                           00000223  Local --
+: check_key_B                       00000228  Local --
+: holdB_2                           00000233  Local --
+: check_key_C                       00000238  Local --
+: holdC_2                           00000243  Local --
+: check_key_D                       00000248  Local --
+: holdD_2                           00000253  Local --
+: check_key_E                       00000258  Local --
+: holdE_2                           00000263  Local --
+: check_key_F                       00000268  Local --
+: holdF_2                           00000270  Local --
+: wait_release                      00000274  Local --
+: check_answer                      0000027C  Local --
+: correct_answer                    00000286  Local --
+: song1                             00000292  Local --
+: wait1a                            00000294  Local --
+: wait1b                            00000298  Local --
+: wait1c                            0000029C  Local --
+: delay_return0                     000002A1  Local --
+: wrong_answer                      000002A5  Local --
+: song2                             000002B1  Local --
+: wait2a                            000002B3  Local --
+: wait2b                            000002B7  Local --
+: wait2c                            000002BB  Local --
+: delay_return1                     000002C0  Local --
+: check_3_lives                     000002C5  Local --
+: check_2_lives                     000002CD  Local --
+: check_1_life                      000002D5  Local --
+: check_0_life                      000002DD  Local --
+: game_over                         000002E0  Local --
+: song4                             000002ED  Local --
+: wait4a                            000002EF  Local --
+: wait4b                            000002F3  Local --
+: wait4c                            000002F7  Local --
+: wait4d                            000002FB  Local --
+: game_won                          000002FE  Local --
+: song3                             0000030B  Local --
+: wait3a                            0000030D  Local --
+: wait3b                            00000311  Local --
+: wait3c                            00000315  Local --
+: wait3d                            00000319  Local --
+: show_score                        0000031C  Local --
+: delay_return2                     0000032C  Local --
+: delay_return3                     0000033A  Local --
+: modulus                           00000342  Local --
+: display_firstScore                00000347  Local --
+: check_if1                         0000034C  Local --
+: display_secondScore               0000034F  Local --
+: check2_if1                        00000355  Local --
+: check2_if2                        0000035B  Local --
+: check2_if3                        00000361  Local --
+: check2_if4                        00000367  Local --
+: check2_if5                        0000036D  Local --
+: check2_if6                        00000373  Local --
+: check2_if7                        00000379  Local --
+: check2_if8                        0000037F  Local --
+: check2_if9                        00000385  Local --
+: continue                          00000387  Local --
+: delay_return4                     00000392  Local --
+: func_delay                        00000395  Local --
+: delay_temp                        00000396  Local --
+: delay_check1                      000003A2  Local --
+: delay_check2                      000003A6  Local --
+: delay_check3                      000003AA  Local --
+: delay_check4                      000003AE  Local --
+: delay_check5                      000003B2  Local --
+: delay_check6                      000003B5  Local --
+: delay_check7                      000003B9  Local --
+: delay_check8                      000003BD  Local --
+: delay_check9                      000003C1  Local --
+: delay_check10                     000003C5  Local --
+: end_game                          000003C6  Local --
+: lights_4lives                     000003C9  Local --
+: lights_3lives                     000003CA  Local --
+: lights_2lives                     000003CB  Local --
+: lights_1life                      000003CC  Local --
+: lights_lose                       000003CD  Local --
+: lights_start                      000003CE  Local --
+: lights_amber                      000003CF  Local --
+: display_0                         000003D0  Local --
+: display_1                         000003D1  Local --
+: display_2                         000003D2  Local --
+: display_3                         000003D3  Local --
+: display_4                         000003D4  Local --
+: display_5                         000003D5  Local --
+: display_6                         000003D6  Local --
+: display_7                         000003D7  Local --
+: display_8                         000003D8  Local --
+: display_9                         000003D9  Local --
+: display_A                         000003DA  Local --
+: display_B                         000003DB  Local --
+: display_C                         000003DC  Local --
+: display_D                         000003DD  Local --
+: display_E                         000003DE  Local --
+: display_F                         000003DF  Local --
+: display_G                         000003E0  Local --
+: display_H                         000003E1  Local --
+: display_I                         000003E2  Local --
+: display_L                         000003E3  Local --
+: display_M                         000003E4  Local --
+: display_N                         000003E5  Local --
+: display_O                         000003E6  Local --
+: display_R                         000003E7  Local --
+: display_S                         000003E8  Local --
+: display_T                         000003E9  Local --
+: display_U                         000003EA  Local --
+: display_W                         000003EB  Local --
+: display_Y                         000003EC  Local --
+: display_dash                      000003ED  Local --
+: display_slash                     000003EE  Local --
+: display_multiply                  000003EF  Local --
+: key_0                             000003F0  Local --
+: key_1                             000003F1  Local --
+: key_2                             000003F2  Local --
+: key_3                             000003F3  Local --
+: key_4                             000003F4  Local --
+: key_5                             000003F5  Local --
+: key_6                             000003F6  Local --
+: key_7                             000003F7  Local --
+: key_8                             000003F8  Local --
+: key_9                             000003F9  Local --
+: key_A                             000003FA  Local --
+: key_B                             000003FB  Local --
+: key_C                             000003FC  Local --
+: key_D                             000003FD  Local --
+: key_E                             000003FE  Local --
+: key_F                             000003FF  Local --
+: firstDigit                        00000400  Local --
+: secondDigit                       00000401  Local --
+: correct_first                     00000402  Local --
+: correct_second                    00000403  Local --
+: challenge_index                   00000404  Local --
+: win_lose                          00000405  Local --
+: score                             00000406  Local --
+: scoreFirstDigit                   00000407  Local --
+: scoreSecondDigit                  00000408  Local --
+: current_lives                     00000409  Local --
+: delay                             0000040A  Local --
+: delay_count                       0000040B  Local --
+: delay_loop                        0000040C  Local --
+: which_hold                        0000040D  Local --
+: s1_n1                             0000040E  Local --
+: s1_n2                             0000040F  Local --
+: s1_n3                             00000410  Local --
+: s2_n1                             00000411  Local --
+: s2_n2                             00000412  Local --
+: s2_n3                             00000413  Local --
+: s3_n1                             00000414  Local --
+: s3_n2                             00000415  Local --
+: s3_n3                             00000416  Local --
+: s3_n4                             00000417  Local --
+: s4_n1                             00000418  Local --
+: s4_n2                             00000419  Local --
+: s4_n3                             0000041A  Local --
+: s4_n4                             0000041B  Local --
+: s5_n1                             0000041C  Local --
+: s5_n2                             0000041D  Local --
+: s5_n3                             0000041E  Local --
+: s5_n4                             0000041F  Local --
+: s5_n5                             00000420  Local --
+: s5_n6                             00000421  Local --
+: s5_n7                             00000422  Local --
+: s5_n8                             00000423  Local --
+: zero                              00000424  Local --
+: one                               00000425  Local --
+: two                               00000426  Local --
+: three                             00000427  Local --
+: four                              00000428  Local --
+: five                              00000429  Local --
+: six                               0000042A  Local --
+: seven                             0000042B  Local --
+: eight                             0000042C  Local --
+: nine                              0000042D  Local --
+: ten                               0000042E  Local --
+: eleven                            0000042F  Local --
+: twelve                            00000430  Local --
+: thirteen                          00000431  Local --
+: fourteen                          00000432  Local --
+: fifteen                           00000433  Local --

@@ -1,0 +1,71 @@
+// COMP12111 Exercise 3 - MU0_Datapath 
+// Version 2024. P W Nutter
+//
+// MU0 datapath design - structural Verilog
+// Design is incomplet - functional components of the
+// MU0 datapath need instantiation.
+// Use the names used in the lab instructions.
+//
+// Comments:
+//This design implements the Datapath
+//Updated November 2025
+//By Ayomide Ojediran
+
+// Do not touch the following line it is required for simulation 
+`timescale 1ns/100ps
+ 
+
+module MU0_Datapath(
+input  logic        Clk,
+input  logic        Reset,
+input  logic [15:0] Din,
+input  logic        X_sel,
+input  logic        Y_sel,
+input  logic        Addr_sel,
+input  logic        PC_En,
+input  logic        IR_En,
+input  logic        Acc_En,
+input  logic [1:0]  M,
+output logic [3:0]  F,			// top 4 bits of the instruction
+output logic [11:0] Address,
+output logic [15:0] Dout,
+output logic        N,
+output logic        Z,
+output logic [11:0] PC,
+output logic [15:0] Acc);
+
+
+// Define internal signals using names from the datapath schematic
+logic [15:0] X;
+logic [15:0] IR;
+logic [15:0] ALU;
+logic [15:0] Y;
+
+// Instantiate Datapath components
+//MU0 registers
+MU0_Reg16 ACCReg(.Clk(Clk), .Reset(Reset), .En(Acc_En), .D(ALU), .Q(Acc));
+MU0_Reg12 PCReg(.Clk(Clk), .Reset(Reset), .En(PC_En),  .D(ALU[11:0]), .Q(PC));
+MU0_Reg16 IRReg(.Clk(Clk), .Reset(Reset), .En(IR_En), .D(Din), .Q(IR));
+
+
+
+// MU0 multiplexors   						
+MU0_Mux16 XMux(.A(Acc), .B({4'b0000, PC}), .S(X_sel), .Q(X));
+MU0_Mux16 YMux(.A(Din), .B(IR),  .S(Y_sel), .Q(Y));
+MU0_Mux12 AddrMux(.A(PC), .B(IR[11:0]), .S(Addr_sel), .Q(Address));
+
+// MU0 ALU
+MU0_Alu MU0_ALU(.X(X), .Y(Y), .M(M), .Q(ALU));			
+
+// MU0 Flag generation
+MU0_Flags FLAGS(.Acc(Acc), .N(N), .Z(Z));
+
+
+// The following connects X and Dout together, there's no need for you to do so
+// use X when defining your datapath structure
+assign Dout = X;
+// Buffer added F is op 4 bits of the instruction
+assign F = IR[15:12];
+
+endmodule 
+ 
